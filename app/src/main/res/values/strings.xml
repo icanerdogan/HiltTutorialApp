@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Hilt Tutorial App</string>
+    <string name="title">Title</string>
+    <string name="status">Status</string>
+    <string name="body">Body</string>
 </resources>
