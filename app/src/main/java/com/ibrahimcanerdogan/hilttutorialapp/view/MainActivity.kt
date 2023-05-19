@@ -1,19 +1,26 @@
-package com.ibrahimcanerdogan.hilttutorialapp
+package com.ibrahimcanerdogan.hilttutorialapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ibrahimcanerdogan.hilttutorialapp.data.locale.entities.TaskLocalEntity
 import com.ibrahimcanerdogan.hilttutorialapp.databinding.ActivityMainBinding
 import com.ibrahimcanerdogan.hilttutorialapp.util.ResultState
 import com.ibrahimcanerdogan.hilttutorialapp.util.event.TaskEvent
-import com.ibrahimcanerdogan.hilttutorialapp.view.TaskViewModel
+import com.ibrahimcanerdogan.hilttutorialapp.view.adapter.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var taskAdapter : TaskAdapter
+    @Inject
+    lateinit var linearLayoutManager : LinearLayoutManager
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel : TaskViewModel by viewModels()
@@ -24,6 +31,11 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        // Adapter
+        binding.recyclerView.apply {
+            layoutManager = linearLayoutManager
+            adapter = taskAdapter
+        }
         setObservers()
         viewModel.setTaskState(TaskEvent.GetTask)
     }
@@ -37,17 +49,19 @@ class MainActivity : AppCompatActivity() {
 
                 is ResultState.Success -> {
                     setTaskList(it.data)
+                    setProgressBar(false)
                 }
 
                 is ResultState.Error -> {
                     setError(it.exception.message)
+                    setProgressBar(false)
                 }
             }
         }
     }
 
     private fun setTaskList(tasks : List<TaskLocalEntity>) {
-
+        taskAdapter.setData(tasks)
     }
 
     private fun setError(error : String?) {

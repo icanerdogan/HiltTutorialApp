@@ -13,7 +13,7 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(task : TaskLocalEntity) : Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMany(tasks : List<TaskLocalEntity>) : List<Long>
 
     @Query("SELECT * FROM tasks")
