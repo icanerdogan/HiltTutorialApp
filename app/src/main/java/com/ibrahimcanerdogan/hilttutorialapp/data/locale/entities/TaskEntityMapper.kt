@@ -2,8 +2,9 @@ package com.ibrahimcanerdogan.hilttutorialapp.data.locale.entities
 
 import com.ibrahimcanerdogan.hilttutorialapp.data.remote.response.TaskNetworkResponse
 import com.ibrahimcanerdogan.hilttutorialapp.util.mapper.Mapper
+import javax.inject.Inject
 
-class TaskEntityMapper : Mapper<TaskLocalEntity, TaskNetworkResponse.TaskNetworkResponseItem> {
+class TaskEntityMapper @Inject constructor(): Mapper<TaskLocalEntity, TaskNetworkResponse.TaskNetworkResponseItem> {
 
     override fun mapToEntity(response: TaskNetworkResponse.TaskNetworkResponseItem): TaskLocalEntity {
         return TaskLocalEntity(

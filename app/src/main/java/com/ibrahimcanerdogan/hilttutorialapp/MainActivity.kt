@@ -10,7 +10,9 @@ import com.ibrahimcanerdogan.hilttutorialapp.databinding.ActivityMainBinding
 import com.ibrahimcanerdogan.hilttutorialapp.util.ResultState
 import com.ibrahimcanerdogan.hilttutorialapp.util.event.TaskEvent
 import com.ibrahimcanerdogan.hilttutorialapp.view.TaskViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

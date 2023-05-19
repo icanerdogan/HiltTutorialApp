@@ -8,11 +8,14 @@ import com.ibrahimcanerdogan.hilttutorialapp.data.locale.entities.TaskLocalEntit
 import com.ibrahimcanerdogan.hilttutorialapp.repository.TaskRepositoryImpl
 import com.ibrahimcanerdogan.hilttutorialapp.util.ResultState
 import com.ibrahimcanerdogan.hilttutorialapp.util.event.TaskEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TaskViewModel(
+@HiltViewModel
+class TaskViewModel @Inject constructor(
     private val taskRepositoryImpl: TaskRepositoryImpl
 ) : ViewModel() {
 
