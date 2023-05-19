@@ -2,25 +2,23 @@ package com.ibrahimcanerdogan.hilttutorialapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.ibrahimcanerdogan.hilttutorialapp.data.locale.entities.TaskLocalEntity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.ibrahimcanerdogan.hilttutorialapp.R
 import com.ibrahimcanerdogan.hilttutorialapp.databinding.ActivityMainBinding
-import com.ibrahimcanerdogan.hilttutorialapp.util.ResultState
 import com.ibrahimcanerdogan.hilttutorialapp.util.event.TaskEvent
-import com.ibrahimcanerdogan.hilttutorialapp.view.adapter.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var taskAdapter : TaskAdapter
-    @Inject
-    lateinit var linearLayoutManager : LinearLayoutManager
+    private lateinit var bottomNav : BottomNavigationView
+    private lateinit var navController : NavController
+    private lateinit var navHostFragment : NavHostFragment
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel : TaskViewModel by viewModels()
@@ -31,46 +29,18 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        // Adapter
-        binding.recyclerView.apply {
-            layoutManager = linearLayoutManager
-            adapter = taskAdapter
-        }
-        setObservers()
-        viewModel.setTaskState(TaskEvent.GetTask)
+        bottomNav = binding.bottomNavigationView
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHostFragment.navController
+        bottomNav.setupWithNavController(navController)
+        // for bottom navigation with action bar reaction.
+        //NavigationUI.setupActionBarWithNavController(this, navController)
+        NavigationUI.setupWithNavController(bottomNav, navController)
+
     }
 
-    private fun setObservers() {
-        viewModel.state.observe(this) {
-            when (it) {
-                is ResultState.Loading -> {
-                    setProgressBar(true)
-                }
-
-                is ResultState.Success -> {
-                    setTaskList(it.data)
-                    setProgressBar(false)
-                }
-
-                is ResultState.Error -> {
-                    setError(it.exception.message)
-                    setProgressBar(false)
-                }
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
     }
 
-    private fun setTaskList(tasks : List<TaskLocalEntity>) {
-        taskAdapter.setData(tasks)
-    }
-
-    private fun setError(error : String?) {
-        error?.let {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun setProgressBar(isShown : Boolean) {
-        binding.progressBar.visibility = if (isShown) View.VISIBLE else View.GONE
-    }
 }
